@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-cluster
+spec:
+  serviceName: redis-cluster
+  replicas: 6
+  selector:
+    matchLabels:
+      app: redis-cluster
+  template:
+    metadata:
+      labels:
+        app: redis-cluster
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2
+          command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+          ports:
+            - containerPort: 6379
+              name: redis
+            - containerPort: 16379
+              name: cluster
+          volumeMounts:
+            - name: redis-config
+              mountPath: /usr/local/etc/redis
+            - name: redis-data
+              mountPath: /data
+
+      initContainers:
+        - name: config-init
+          image: alpine:3.19
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -ex
+              apk add --no-cache gettext
+              envsubst < /config-template/redis.conf > /config/redis.conf
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: config-template
+              mountPath: /config-template
+            - name: redis-config
+              mountPath: /config
+
+      volumes:
+        - name: config-template
+          configMap:
+            name: redis-cluster-config
+        - name: redis-config
+          emptyDir: {}
+        - name: redis-data
+          emptyDir: {}
+

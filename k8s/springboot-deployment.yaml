@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot
+  template:
+    metadata:
+      labels:
+        app: springboot
+    spec:
+      containers:
+        - name: springboot
+          image: kafka-springboot-test:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: "mysql"
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: "testdb"
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASSWORD
+              value: "root"
+            # Redis Cluster
+            - name: REDIS_CLUSTER_NODES
+              value: "redis-cluster-0.redis-cluster:6379,redis-cluster-1.redis-cluster:6379,redis-cluster-2.redis-cluster:6379,redis-cluster-3.redis-cluster:6379,redis-cluster-4.redis-cluster:6379,redis-cluster-5.redis-cluster:6379"
+            - name: REDIS_PASSWORD
+              value: ""
+            - name: REDIS_TIMEOUT
+              value: "3000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot
+spec:
+  selector:
+    app: springboot
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort
