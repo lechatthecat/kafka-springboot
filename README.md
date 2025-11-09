@@ -1,9 +1,17 @@
 ## How to start this project
-1. ./gradlew bootJar
-2. docker build -t kafka-springboot-test:latest -f docker/springboot/Dockerfile .
-3. minikube start
-4. minikube image load kafka-springboot-test:latest
-5.
+### prerequisites
+- minikube
+- java21 (openjdk21)
+- gradle Gradle 8.14.x
+
+### start
+1. git clone https://github.com/lechatthecat/kafka-springboot
+2. cd kafka-springboot
+3. ./gradlew bootJar
+4. docker build -t kafka-springboot-test:latest -f docker/springboot/Dockerfile .
+5. minikube start
+6. minikube image load kafka-springboot-test:latest
+7.
 ```
 kubectl apply -f ./k8s/mysql-deployment.yaml
 kubectl apply -f ./k8s/redis-configmap.yaml
