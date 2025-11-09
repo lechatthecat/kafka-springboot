@@ -76,6 +76,17 @@ Now this log should appear from Kafka
 📩 [KafkaConsumer] Received message: hello
 ```
 
+## Metrics (incomplete)
+```
+kubectl apply -f ./k8s/metrics/influxdb-deployment.yaml
+kubectl apply -f ./k8s/metrics/grafana-deployment.yaml
+minikube service grafana --url
+  which will show a url like http://192.168.49.2:32000
+  use this url and this credential to login 
+    user: admin
+    pass: admin123
+```
+
 ## Optional
 delete the deployments
 ```
