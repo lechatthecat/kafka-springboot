@@ -36,6 +36,13 @@ spec:
               value: ""
             - name: REDIS_TIMEOUT
               value: "3000"
+            # Kafka
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-0.kafka:9092,kafka-1.kafka:9092,kafka-2.kafka:9092"
+            - name: KAFKA_CONSUMER_GROUP
+              value: "test-group"
+            - name: KAFKA_DEFAULT_TOPIC
+              value: "test-topic"
 ---
 apiVersion: v1
 kind: Service
